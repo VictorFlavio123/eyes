@@ -17,12 +17,12 @@ public class EyeController : MonoBehaviour
     public Quaternion defaultRotation;
 
     public GameObject col;
-        
+
     // Start is called before the first frame update
     void Awake()
     {
         blinkWait = blinkTime;
-        defaultRotation = transform.GetChild(0).transform.rotation;
+        defaultRotation = col.transform.localRotation;
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class EyeController : MonoBehaviour
     //Also, takes around 0.1 seconds
     void Update()
     {
-        if(Time.frameCount % 200 == 0)
+        if (Time.frameCount % 200 == 0)
         {
             isBlinking = true;
         }
@@ -61,7 +61,7 @@ public class EyeController : MonoBehaviour
     {
         //saccade
         transform.GetChild(0).transform.rotation = defaultRotation;
-        transform.GetChild(0).transform.Rotate(new Vector3(0, 0, saccadeMag/3.14f));
+        transform.GetChild(0).transform.Rotate(new Vector3(0, 0, saccadeMag / 3.14f));
     }
 
     //bliiink mothafucka!
@@ -70,10 +70,10 @@ public class EyeController : MonoBehaviour
         //if it is closing, eye diminish
         if (closing)
         {
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - blinkStep, 
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - blinkStep,
                 transform.localScale.z);
         }
-            
+
         //if the eye is closed, wait a bit
         if (transform.localScale.y <= 0 && blinkWait > 0)
         {
@@ -89,7 +89,7 @@ public class EyeController : MonoBehaviour
         }
 
         //donezzo
-        if(blinkWait < blinkTime && transform.localScale.y >= 1.5f)
+        if (blinkWait < blinkTime && transform.localScale.y >= 1.5f)
         {
             isBlinking = false;
             closing = true;
@@ -97,86 +97,60 @@ public class EyeController : MonoBehaviour
         }
     }
 
-    public void Movement(List<string> l, int side)
+    public void Movement(List<string> l, List<string> lb, int side)
     {
         int index;
         string[] coord = l.ToArray();
+        string[] coordb = lb.ToArray();
         float[] cx = new float[7];
         float[] cy = new float[7];
+        float[] cxb = new float[7];
+        float[] cyb = new float[7];
 
         for (index = 0; index < 7; index++)
         {
             cx[index] = float.Parse(coord[index].Split(',')[0]);
             cy[index] = float.Parse(coord[index].Split(',')[1]);
+
+            cxb[index] = float.Parse(coordb[index].Split(',')[0]);
+            cyb[index] = float.Parse(coordb[index].Split(',')[1]);
         }
 
-        Vector3[] worldC = new Vector3[6];
-
-        /*worldC[0] = transform.Find("A").transform.localPosition;
-        worldC[1] = transform.Find("B").transform.localPosition;
-        worldC[2] = transform.Find("C").transform.localPosition;
-        worldC[3] = transform.Find("D").transform.localPosition;
-        worldC[4] = transform.Find("E").transform.localPosition;
-        worldC[5] = transform.Find("F").transform.localPosition;*/
-
-        //Debug.Log("42: "+cx[6]+" , "+cy[6]+" ; 45: "+cx[9]+" , "+cy[9]+" ; 69: "+cx[13]+" , "+cy[13]);
-
-        float propImg;
-        float propWorld;
-        if (side == 1)
-        {
-            /*propImg = (cx[6] - cx[3]) / (cx[3] - cx[0]);
-            propWorld = propImg * (10 - 20) + 20;*/
-            propWorld = (315 * cx[0] - 225 * cx[3] - 90 * cx[6]) / (cx[3] - cx[0]);
-            //Debug.Log("Right: pImg: "+propImg+" pWorld: "+propWorld);
-        }
-        else
-        {
-            //propImg = (cx[6] - cx[3]) / (cx[0] - cx[3]);
-            //propWorld = cx[0]
-            propWorld = (315*cx[0]-225*cx[3]-90*cx[6]) / (cx[3] - cx[0]);
-            
-         //   Debug.Log("Left: pImg: " + propImg );
-        }
-
-        //float propImg = (cx[6] - cx[0]) / (cx[3] - cx[0]);
-        //float propWorld = propImg * (10 - 35) + 35;
-        //Debug.Log(propWorld);
-
-        /*Vector3 relativePos = (new Vector3(propWorld, 0, 0)) - col.transform.position;
-
-        // the second argument, upwards, defaults to Vector3.up
-        Quaternion rotation = Quaternion.LookRotation(relativePos, Vector3.up);
-        col.transform.rotation = rotation;
-        */
-
-        col.transform.rotation = defaultRotation;
-        col.transform.Rotate(new Vector3(0, propWorld * Time.deltaTime * 0.1f, 0));
-        /*if (propWorld >= 0.5f)
-        {
-            Debug.Log(propWorld + " >>>>>>>>> 0.5 ");
-            col.transform.Rotate(new Vector3(0, -propWorld / 55, 0));
-        }
-        else
-        {
-            col.transform.Rotate(new Vector3(0, propWorld / 55, 0));
-            Debug.Log(" <<<<<<<<< 0.5 ");
-        }*/
-
-        //Debug.Log(transform.name + "NOT NORMALIZED-----" + new Vector3(0, propWorld, 0));
-        //transform.GetChild(0).transform
-
-        //Debug.Log(worldC[0].x);
+        // Pontos
+        // 0 = 42
+        // 1 = 43
+        // 2 = 44
+        // 3 = 45
+        // 4 = 46
+        // 5 = 47
+        // 6 = 69
 
 
-        /*float cx = (p42x + p45x)/2;
-        float cy = (p42y + p45y)/2;
-        float vx = cx - p69x; 
-        float vy = cy - p69y;*/
+        float upperMid, upperMidB, bottomMid, bottomMidB;
+        upperMid = (cy[2] + cy[1])/2;
+        upperMidB = (cyb[2] + cyb[1]) / 2;
+        bottomMid = (cy[5] + cy[4])/2;
+        bottomMidB = (cyb[5] + cyb[4]) / 2;
+        //Debug.Log("upperMid: "+upperMid+" - bottomMid: "+bottomMid);
 
-        /*Vector2 norm = new Vector2(vx, vy).normalized;
-        Vector3 v = new Vector3(Mathf.Asin(norm.y), Mathf.Sin(norm.x), 0f);
-        transform.GetChild(0).localEulerAngles = v;
-        Debug.Log(cx + " " + cy + " " + vx + " " + vy+ " " + norm + " " + v);*/
+        float propWorld, propWorldY, nextPropWorld, nextPropWorldY;
+        
+        propWorld = 225 - ((90 * (cx[6] - cx[0])) / (cx[3] - cx[0]));
+        propWorldY = 15 - (((cy[6]-upperMid)*30)/(bottomMid-upperMid));
+        nextPropWorld = 225 - ((90 * (cxb[6] - cxb[0])) / (cxb[3] - cxb[0]));
+        nextPropWorldY = 20 - (((cyb[6] - upperMidB) * 40) / (bottomMidB - upperMidB));
+        //float velX = 0.0f, velY = 0.0f;
+        //float newPositionX = Mathf.SmoothDamp(nextPropWorld, propWorld, ref velX, 0.3f);
+        //float newPositionY = Mathf.SmoothDamp(nextPropWorldY, propWorldY, ref velY, 0.3f);
+        //transform.position = new Vector3(transform.position.x, newPosition, transform.position.z);
+
+        float angleX = Mathf.LerpAngle(propWorld, nextPropWorld, 0.0000000000003f);
+        float angleY = (Mathf.LerpAngle(propWorldY, nextPropWorldY, 0.0000000000003f))%180f;
+
+
+        Debug.Log(angleY);
+        //Debug.Log(transform.name + " Current - " + propWorld + " Next - " + nextPropWorld + " Angle - " + angle);
+        col.transform.localEulerAngles = new Vector3(angleY, angleX, 0f);
+        //col.transform.localRotation = Quaternion.EulerAngles(new Vector3(0f, propWorld, 0f));
     }
 }
