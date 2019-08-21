@@ -18,6 +18,8 @@ public class EyeController : MonoBehaviour
 
     public GameObject col;
 
+    public int factor = 20;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -138,19 +140,104 @@ public class EyeController : MonoBehaviour
         propWorld = 225 - ((90 * (cx[6] - cx[0])) / (cx[3] - cx[0]));
         propWorldY = 15 - (((cy[6]-upperMid)*30)/(bottomMid-upperMid));
         nextPropWorld = 225 - ((90 * (cxb[6] - cxb[0])) / (cxb[3] - cxb[0]));
-        nextPropWorldY = 20 - (((cyb[6] - upperMidB) * 40) / (bottomMidB - upperMidB));
+        nextPropWorldY = 15 - (((cyb[6] - upperMidB) * 30) / (bottomMidB - upperMidB));
         //float velX = 0.0f, velY = 0.0f;
         //float newPositionX = Mathf.SmoothDamp(nextPropWorld, propWorld, ref velX, 0.3f);
         //float newPositionY = Mathf.SmoothDamp(nextPropWorldY, propWorldY, ref velY, 0.3f);
         //transform.position = new Vector3(transform.position.x, newPosition, transform.position.z);
+        float countAnglesX = propWorld, countAnglesY = propWorldY;
+        Debug.Log(countAnglesX);
+        for(int i = 0; i < factor; i++)
+        {
+            float angleXT = 0, angleYT = 0, testX = 0, testY = 0;
+        //    Vector3 resultPropWorld = new Vector3(0, 0, 0), resultPropWorldY = new Vector3(0, 0, 0);
+      //      Vector3 propWorldVector = new Vector3(0, 0, 0);
+    //        Vector3 nextpropWorldVector = new Vector3(0, 0, 0);
+  //          Vector3 propWorldYVector = new Vector3(0, 0, 0);
+//            Vector3 nextpropWorlYdVector = new Vector3(0, 0, 0);
 
-        float angleX = Mathf.LerpAngle(propWorld, nextPropWorld, 0.0000000000003f);
-        float angleY = (Mathf.LerpAngle(propWorldY, nextPropWorldY, 0.0000000000003f))%180f;
+           // float aX, bX, cY, dY;
 
 
-        Debug.Log(angleY);
+            if (i < factor-1)
+            {
+                angleXT = Mathf.LerpAngle((((nextPropWorld - propWorld) / factor) * i) + countAnglesX, (((nextPropWorld - propWorld) / factor) * (i + 1)) + countAnglesX, 0.005f);
+                angleYT = Mathf.LerpAngle((((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY, (((nextPropWorldY - propWorldY) / factor) * (i + 1)) + countAnglesY, 0.005f);
+
+                testX = ((((nextPropWorld - propWorld) / factor) * (i + 1)) + countAnglesX) - ((((nextPropWorld - propWorld) / factor) * i) + countAnglesX);
+                testY = ((((nextPropWorldY - propWorldY) / factor) * (i + 1)) + countAnglesY) - ((((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY);
+                //propWorldVector.y = (((nextPropWorld - propWorld) / factor) * i) + countAnglesX;
+                //nextpropWorldVector.y = (((nextPropWorld - propWorld) / factor) * (i + 1)) + countAnglesX;
+                //propWorldYVector.y = (((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY;
+                //nextpropWorlYdVector.y = (((nextPropWorldY - propWorldY) / factor) * (i + 1)) + countAnglesY;
+
+                // aX = (((nextPropWorld - propWorld) / factor) * i) + countAnglesX;
+                // bX = (((nextPropWorld - propWorld) / factor) * (i + 1)) + countAnglesX;
+                // cY = (((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY;
+                // dY = (((nextPropWorldY - propWorldY) / factor) * (i + 1)) + countAnglesY;
+
+                countAnglesX = countAnglesX + (((nextPropWorld - propWorld) / factor) * i);
+                countAnglesY = countAnglesY + (((nextPropWorldY - propWorldY) / factor) * i);
+
+                //Debug.Log(angleYT);
+                //Debug.Log(transform.name + " Current - " + propWorld + " Next - " + nextPropWorld + " Angle - " + angle);
+                //col.transform.localEulerAngles = new Vector3(angleYT, angleXT, 0f);
+            }
+            else
+            {
+                angleXT = Mathf.LerpAngle((((nextPropWorld - propWorld) / factor) * i) + countAnglesX, nextPropWorld + countAnglesX, 0.005f);
+                angleYT = Mathf.LerpAngle((((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY, nextPropWorldY + countAnglesY, 0.005f);
+
+
+                testX = (nextPropWorld + countAnglesX )- ((((nextPropWorld - propWorld) / factor) * i) + countAnglesX);
+                testY = (nextPropWorldY + countAnglesY) - ((((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY);
+                //propWorldVector.y = (((nextPropWorld - propWorld) / factor) * i) + countAnglesX;
+                //nextpropWorldVector.y = nextPropWorld + countAnglesX;
+                //propWorldYVector.y = (((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY;
+                //nextpropWorlYdVector.y = nextPropWorldY + countAnglesY;
+
+                // aX = (((nextPropWorld - propWorld) / factor) * i) + countAnglesX;
+                // bX = nextPropWorld + countAnglesX;
+                // cY = (((nextPropWorldY - propWorldY) / factor) * i) + countAnglesY;
+                //  dY = nextPropWorldY + countAnglesY;
+
+                //countAnglesX = countAnglesX + ((nextPropWorld - propWorld) / 10);
+
+                //countAnglesX = countAnglesX + (((nextPropWorld - propWorld) / 10) * i);
+
+
+                //Debug.Log(transform.name + " Current - " + propWorld + " Next - " + nextPropWorld + " Angle - " + angle);
+
+            }
+
+            //col.transform.localRotation = Quaternion.Slerp(Quaternion., to.rotation, timeCount);
+            //timeCount = timeCount + Time.deltaTime;
+
+            //Quaternion rotationAgent = Quaternion.LookRotation(relativePos, Vector3.up);
+            //col.transform.rotation = Quaternion.Lerp(new Quaternion(cY, 0, aX, 0), new Quaternion(dY,0,bX, 0), Mathf.SmoothStep(0.0f, 1.5f, Time.deltaTime));
+
+            //resultPropWorld = Vector3.Lerp(propWorldVector, nextpropWorldVector, 0.05f);
+            //resultPropWorldY = Vector3.Lerp(propWorldYVector, nextpropWorlYdVector, 0.05f);
+
+            Debug.Log(angleXT);
+            if(testY < -30)
+            {
+                testY = -30;
+            }else if (testY > 30)
+            {
+                testY = 30;
+            }
+            col.transform.localEulerAngles = new Vector3(testY, testX, 0);
+
+        }
+
+        //float angleX = Mathf.LerpAngle(propWorld, nextPropWorld, 0.0000000000003f);
+        //float angleY = (Mathf.LerpAngle(propWorldY, nextPropWorldY, 0.0000000000003f))%180f;
+
+
+        //Debug.Log(angleY);
         //Debug.Log(transform.name + " Current - " + propWorld + " Next - " + nextPropWorld + " Angle - " + angle);
-        col.transform.localEulerAngles = new Vector3(angleY, angleX, 0f);
+        //col.transform.localEulerAngles = new Vector3(angleY, angleX, 0f);
         //col.transform.localRotation = Quaternion.EulerAngles(new Vector3(0f, propWorld, 0f));
     }
 }

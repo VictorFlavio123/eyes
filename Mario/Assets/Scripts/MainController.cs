@@ -6,8 +6,8 @@ public class MainController : MonoBehaviour
 {
     private GameObject[] eyes;
     private string[] arr;
-    private int k, index;
-    public GameObject left, right;
+    private int k, index, kT;
+    public GameObject left, right, rightT, leftT;
 
     private void Awake()
     {
@@ -73,10 +73,40 @@ public class MainController : MonoBehaviour
 
 
         // Pausa entre as rotações
-        if (Time.frameCount % 10 == 0)
+        if (Time.frameCount % 24 == 0)
         {
             if (index < arr.Length - 14)
             {
+                /*for (int i = 0; i < 10; i++)
+                {
+                    List<string> laT = new List<string>();
+                    List<string> lbT = new List<string>();
+                    List<string> maT = new List<string>();
+                    List<string> mbT = new List<string>();
+
+                    // Pega pontos do olho essquerdo
+                    for (kT = 0; kT < 6; kT++)
+                    {
+                        laT.Add(arr[kT + index]); // Frame atual 
+                        lbT.Add(arr[kT + index + 14]); // Frame seguinte
+                    }
+                    laT.Add(arr[12 + index]);
+                    lbT.Add(arr[12 + index + 14]);
+
+                    // Pega pontos do olho direito
+                    for (kT = 6; kT < 12; kT++)
+                    {
+                        maT.Add(arr[kT + index]);
+                        mbT.Add(arr[kT + index + 14]);
+                    }
+                    maT.Add(arr[13 + index]);
+                    mbT.Add(arr[13 + index + 14]);
+
+                    // Realiza movimento com base no pontos que foram pêgos
+                    //rightT.GetComponent<EyeController>().Movement(maT, mbT, 1);
+                    //leftT.GetComponent<EyeController>().Movement(maT, mbT, 1);
+                }*/
+
                 List<string> la = new List<string>();
                 List<string> lb = new List<string>();
                 List<string> ma = new List<string>();
